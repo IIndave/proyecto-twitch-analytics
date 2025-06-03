@@ -6,7 +6,7 @@ Está construida con Laravel en el backend y se conecta mediante HTTP a los endp
 ## Cómo ejecutar la aplicación
   1. Clona el repositorio
      
-    - git clone https://github.com/usuario/proyecto-twitch-analytics.git
+    - git clone https://github.com/IIndave/proyecto-twitch-analytics.git
      
     - cd proyecto-twitch-analytics/laravel
 
