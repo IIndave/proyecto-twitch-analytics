@@ -33,7 +33,26 @@ class TwitchServices
     public function getUserById($id)
     {
         $token = $this->getAccessToken();
-        
-        return $token;
+        if (!$token) {
+            return ['error' => 'unauthorized'];
+        }
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Client-Id' => $this->clientId,
+        ])->get('https://api.twitch.tv/helix/users',[
+            'id' => $id
+            ]);
+
+
+        if ($response->status() === 404 || empty($response->json('data'))) {
+            return ['error' => 'not_found'];
+        }
+
+        if ($response->failed()) {
+            return ['error' => 'twitch_api_error'];
+        }
+
+        return $response->json('data')[0]; 
     }
 }
