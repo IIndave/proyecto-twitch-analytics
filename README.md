@@ -8,7 +8,7 @@ Está construida con Laravel en el backend y se conecta mediante HTTP a los endp
      
     - git clone https://github.com/IIndave/proyecto-twitch-analytics.git
      
-    - cd proyecto-twitch-analytics/laravel
+    - cd laravel
 
   2. Instala las dependencias de PHP
      
