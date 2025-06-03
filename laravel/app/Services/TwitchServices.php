@@ -55,4 +55,31 @@ class TwitchServices
 
         return $response->json('data')[0]; 
     }
+
+    public function getLiveUsers()
+    {
+        $token = $this->getAccessToken();
+        if (!$token) {
+            return ['error' => 'unauthorized'];
+        }
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Client-Id' => $this->clientId,
+        ])->get('https://api.twitch.tv/helix/streams', [
+            'type' => 'live',
+        ]);
+
+        if ($response->failed()) {
+            return ['error' => 'twitch_api_error'];
+        }
+        
+        $users =  $response->json('data'); 
+        return collect($users)->map(function ($user) {
+            return [
+                'title' => $user['title'],
+                'user_name' => $user['user_name'],
+            ];
+        });
+    }
 }
