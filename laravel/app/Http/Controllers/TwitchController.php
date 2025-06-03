@@ -16,16 +16,7 @@ class TwitchController extends Controller
     {
         $user =  $this->twitchServices->getUserById($id); 
         if (isset($user['error'])) {
-            switch ($user['error']) {
-                case 'unauthorized':
-                    return response()->json(['error' => "Unauthorized. Twitch access token is invalid or has expired."], 401);
-                case 'not_found':
-                    return response()->json(['error' => "User not found."], 404);
-                case 'twitch_api_error':
-                    return response()->json(['error' => "Twitch API error."], 500);
-                default:
-                    return response()->json(['error' => "Unknown error."], 500);
-            }
+            return $this->handleTwitchError($user);
         }
 
         return response()->json($user);
@@ -35,16 +26,23 @@ class TwitchController extends Controller
     {
         $users =  $this->twitchServices->getLiveUsers(); 
         if (isset($users['error'])) {
-            switch ($users['error']) {
-                case 'unauthorized':
-                    return response()->json(['error' => "Unauthorized. Twitch access token is invalid or has expired."], 401);
-                case 'twitch_api_error':
-                    return response()->json(['error' => "Twitch API error."], 500);
-                default:
-                    return response()->json(['error' => "Unknown error."], 500);
-            }
+            return $this->handleTwitchError($users);
         }
 
         return response()->json($users);
     }    
+
+    private function handleTwitchError($result)
+    {
+        switch ($result['error']) {
+            case 'unauthorized':
+                return response()->json(['error' => "Unauthorized. Twitch access token is invalid or has expired."], 401);
+            case 'not_found':
+                return response()->json(['error' => "User not found."], 404);
+            case 'twitch_api_error':
+                return response()->json(['error' => "Twitch API error"], 500);
+            default:
+                return response()->json(['error' => "Unknown error."], 500);
+        }
+    }
 }

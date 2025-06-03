@@ -15,6 +15,7 @@ class TwitchServices
         $this->clientSecret = config('services.twitch.client_secret');
     }
 
+    // Obtiene el access token
     public function getAccessToken()
     {
         $response = Http::asForm()->post('https://id.twitch.tv/oauth2/token', [
@@ -30,6 +31,7 @@ class TwitchServices
         return $response->json()['access_token'] ?? null;
     }
 
+    // Lista la info del usuario con ID
     public function getUserById($id)
     {
         $token = $this->getAccessToken();
@@ -56,6 +58,7 @@ class TwitchServices
         return $response->json('data')[0]; 
     }
 
+    // Lista los usuarios que estan en directo por defecto los  primeros 20 mas activos
     public function getLiveUsers()
     {
         $token = $this->getAccessToken();
@@ -67,7 +70,7 @@ class TwitchServices
             'Authorization' => 'Bearer ' . $token,
             'Client-Id' => $this->clientId,
         ])->get('https://api.twitch.tv/helix/streams', [
-            'type' => 'live',
+            'type' => 'live'
         ]);
 
         if ($response->failed()) {
